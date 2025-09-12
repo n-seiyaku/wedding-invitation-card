@@ -1,26 +1,70 @@
-@import "tailwindcss";
+@layer theme, base, mui, components, utilities;
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #dff3fe;
+    --foreground: #171717;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+    /* Expose Next.js Google Font variable to Tailwind utilities */
+    --font-dancing-script: var(--font-dancing-script);
+
+    /* Brand palette for Tailwind v4 utility classes like bg-brand-50 */
+    --color-brand-50: #e3f1fe;
+    --color-brand-100: #dff3fe;
+    --color-brand-200: #adc8de;
+    --color-brand-300: #94b4d4;
+    --color-brand-400: #7ba5de;
+    --color-brand-500: #507ab9;
+    --color-brand-600: #005a96;
+    --color-brand-900: #041f3b;
+    --color-accent: #90a9bb;
+    --color-muted: #adc0de;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Reveal-on-scroll animation via class toggles (GPU-friendly) */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    will-change: transform, opacity;
+    transition:
+        transform 320ms ease,
+        opacity 320ms ease;
+}
+.reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+.square {
+    width: calc(2rem - 1px);
+    height: calc(2rem - 1px);
+    margin-top: 1px;
+    margin-left: 1px;
+    background-color: #ffa828;
+}
+
+.square-placeholder {
+    width: calc(2rem - 1px);
+    height: calc(2rem - 1px);
+    margin-top: 1px;
+    margin-left: 1px;
+    background-color: #ffa828;
+    opacity: 0.2;
 }
