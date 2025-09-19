@@ -1,23 +1,24 @@
+// Navigator.jsx
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import HomeIcon from '@mui/icons-material/Home'
 import MapIcon from '@mui/icons-material/Map'
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera'
 import PersonIcon from '@mui/icons-material/Person'
-import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
 import {
     HomeOutlined,
     MapOutlined,
     PersonOutline,
     PhotoCameraOutlined,
 } from '@mui/icons-material'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 const navItems = [
     { label: 'Home', link: '/home', icon: [<HomeIcon />, <HomeOutlined />] },
-    { label: 'Map', link: '/map', icon: [<MapIcon />, <MapOutlined />] },
+    { label: 'Story', link: '/story', icon: [<MapIcon />, <MapOutlined />] },
     {
         label: 'Album',
         link: '/album',
@@ -33,20 +34,50 @@ const navItems = [
 export default function Navigator() {
     const pathname = usePathname()
     const [value, setValue] = useState(pathname)
+    const navRef = useRef(null)
 
-    const handleChange = (e, newValue) => {
-        setValue(newValue)
-    }
+    useLayoutEffect(() => {
+        const el = navRef.current
+        if (!el) return
+
+        const update = () => {
+            const h = el.offsetHeight || 0
+            // set 2 biến: chiều cao thật và kèm safe-area cho iOS
+            document.documentElement.style.setProperty(
+                '--bottom-nav-height',
+                `${h}px`
+            )
+            document.documentElement.style.setProperty(
+                '--bottom-nav-safe',
+                `calc(${h}px + env(safe-area-inset-bottom, 0px))`
+            )
+        }
+
+        update()
+        const ro = new ResizeObserver(update)
+        ro.observe(el)
+        window.addEventListener('resize', update)
+        return () => {
+            ro.disconnect()
+            window.removeEventListener('resize', update)
+        }
+    }, [])
 
     return (
-        <Paper elevation={3} className="fixed right-0 bottom-0 left-0 z-50">
+        <Paper
+            ref={navRef}
+            elevation={3}
+            className="fixed right-0 bottom-0 left-0 z-50"
+            sx={{
+                backgroundColor: '#DFF3FE',
+                borderTop: '1px solid rgb(229 231 235)',
+                pb: 'env(safe-area-inset-bottom, 0px)',
+            }}
+        >
             <BottomNavigation
-                sx={{
-                    backgroundColor: '#DFF3FE',
-                    borderTop: '1px solid rgb(229 231 235)',
-                }}
                 value={value}
-                onChange={handleChange}
+                onChange={(_, nv) => setValue(nv)}
+                sx={{ backgroundColor: 'transparent' }}
             >
                 {navItems.map((item) => (
                     <BottomNavigationAction

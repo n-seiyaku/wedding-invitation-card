@@ -3,8 +3,16 @@ import TopBar from '../components/TopBar'
 
 export default function MainLayout({ children }) {
     return (
-        <div className="flex min-h-dvh flex-col">
-            <div className="flex-1 pb-16">{children}</div>
+        <div className="flex flex-col">
+            <TopBar />
+            <div
+                style={{
+                    paddingTop: 'var(--top-bar-height, 56px)',
+                    paddingBottom: 'var(--bottom-nav-safe, 72px)',
+                }}
+            >
+                {children}
+            </div>
             <Navigator />
         </div>
     )

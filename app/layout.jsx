@@ -1,6 +1,6 @@
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
-import { Caladea, Dancing_Script } from 'next/font/google'
+import { Caladea, Dancing_Script, Roboto } from 'next/font/google'
 import './globals.css'
+import Providers from './providers'
 
 const caladea = Caladea({
     variable: '--font-caladea',
@@ -11,6 +11,12 @@ const caladea = Caladea({
 const dancingScript = Dancing_Script({
     variable: '--font-dancing-script',
     subsets: ['vietnamese'],
+    weight: ['400', '700'],
+})
+
+const roboto = Roboto({
+    variable: '--font-roboto',
+    subsets: ['latin', 'vietnamese'],
     weight: ['400', '700'],
 })
 
@@ -29,11 +35,9 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body
-                className={`${caladea.variable} ${dancingScript.variable} antialiased`}
+                className={`${caladea.variable} ${dancingScript.variable} ${roboto.variable} antialiased`}
             >
-                <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-                    {children}
-                </AppRouterCacheProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     )

@@ -2,7 +2,7 @@
 @import 'tailwindcss';
 
 :root {
-    --background: #dff3fe;
+    --background: #adc8de;
     --foreground: #171717;
 }
 
@@ -13,6 +13,8 @@
     --font-mono: var(--font-geist-mono);
     /* Expose Next.js Google Font variable to Tailwind utilities */
     --font-dancing-script: var(--font-dancing-script);
+    --font-caladea: var(--font-caladea);
+    --font-roboto: var(--font-roboto);
 
     /* Brand palette for Tailwind v4 utility classes like bg-brand-50 */
     --color-brand-50: #e3f1fe;
@@ -27,44 +29,7 @@
     --color-muted: #adc0de;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
-}
-
 body {
     font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Reveal-on-scroll animation via class toggles (GPU-friendly) */
-.reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    will-change: transform, opacity;
-    transition:
-        transform 320ms ease,
-        opacity 320ms ease;
-}
-.reveal.is-in {
-    opacity: 1;
-    transform: none;
-}
-
-.square {
-    width: calc(2rem - 1px);
-    height: calc(2rem - 1px);
-    margin-top: 1px;
-    margin-left: 1px;
-    background-color: #ffa828;
-}
-
-.square-placeholder {
-    width: calc(2rem - 1px);
-    height: calc(2rem - 1px);
-    margin-top: 1px;
-    margin-left: 1px;
-    background-color: #ffa828;
-    opacity: 0.2;
+    background-color: var(--background);
 }
