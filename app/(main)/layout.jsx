@@ -3,7 +3,7 @@ import TopBar from '../components/TopBar'
 
 export default function MainLayout({ children }) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center justify-center">
             <TopBar />
             <div
                 style={{

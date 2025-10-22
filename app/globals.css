@@ -33,3 +33,23 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: var(--background);
 }
+
+.MuiOutlinedInput-input[type='password']::-ms-reveal,
+.MuiOutlinedInput-input[type='password']::-ms-clear {
+    display: none !important;
+}
+
+.indent-fix::before {
+    content: '';
+    display: inline-block;
+    width: 1rem; /* giống indent-4 */
+}
+
+.text {
+    overflow: hidden;
+}
+
+.char {
+    transform: translateY(175px);
+    transition: transform 0.8s;
+}

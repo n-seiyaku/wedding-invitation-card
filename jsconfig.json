@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
-        "paths": {
-            "@/*": ["./*"]
-        }
-    }
+        "checkJs": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": { "@/*": ["./*"] },
+        "module": "esnext",
+        "moduleResolution": "bundler"
+    },
+    "exclude": ["node_modules", ".next", "out", "build"]
 }

@@ -2,7 +2,7 @@
 
 import React, { useLayoutEffect, useRef } from 'react'
 
-export default function TopBar() {
+export default function TopBar({ className }) {
     const ref = useRef(null)
 
     useLayoutEffect(() => {
@@ -30,7 +30,7 @@ export default function TopBar() {
     return (
         <div
             ref={ref}
-            className="font-dancing-script bg-brand-100 fixed top-0 right-0 left-0 z-10 flex h-14 w-full items-center justify-center text-2xl"
+            className={`font-dancing-script bg-brand-100 fixed top-0 right-0 left-0 z-10 flex h-14 w-full items-center justify-center text-2xl ${className}`}
         >
             T & D
         </div>

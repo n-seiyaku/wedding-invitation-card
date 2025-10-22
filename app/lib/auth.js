@@ -1,60 +1,60 @@
+import jwt from 'jsonwebtoken'
+import { cookies } from 'next/headers'
 import crypto from 'crypto'
-import { sql } from '../api/neonConfig'
 
-const AUTH_COOKIE = 'auth'
-const AUTH_SECRET = process.env.AUTH_SECRET || 'dev-secret-change-me'
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET
+const ACCESS_EXPIRES = process.env.ACCESS_EXPIRES || '15m'
+const REFRESH_EXPIRES = process.env.REFRESH_EXPIRES || '7d'
 
-export async function getUserByUsername(username) {
-    const rows =
-        await sql`SELECT username, password FROM users WHERE username = ${username} LIMIT 1`
-    return rows?.[0] || null
+export function signAccessToken(user) {
+    const payload = { sub: user.id, username: user.username, role: user.role }
+    return jwt.sign(payload, ACCESS_SECRET, {
+        algorithm: 'HS256',
+        expiresIn: ACCESS_EXPIRES,
+    })
 }
 
-function base64url(input) {
-    return Buffer.from(input)
-        .toString('base64')
-        .replace(/=/g, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
+export function signRefreshToken(user, jti) {
+    const payload = { sub: user.id, jti }
+    return jwt.sign(payload, REFRESH_SECRET, {
+        algorithm: 'HS256',
+        expiresIn: REFRESH_EXPIRES,
+    })
 }
 
-export function createSessionToken(payload) {
-    const header = base64url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
-    const body = base64url(JSON.stringify(payload))
-    const data = `${header}.${body}`
-    const sig = crypto
-        .createHmac('sha256', AUTH_SECRET)
-        .update(data)
-        .digest('base64')
-        .replace(/=/g, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-    return `${data}.${sig}`
+export function verifyAccess(token) {
+    return jwt.verify(token, ACCESS_SECRET, { algorithms: ['HS256'] })
 }
 
-export function verifySessionToken(token) {
-    if (!token || typeof token !== 'string' || !token.includes('.')) return null
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
-    const [header, body, sig] = parts
-    const data = `${header}.${body}`
-    const expected = crypto
-        .createHmac('sha256', AUTH_SECRET)
-        .update(data)
-        .digest('base64')
-        .replace(/=/g, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-    if (sig !== expected) return null
-    try {
-        const json = Buffer.from(
-            body.replace(/-/g, '+').replace(/_/g, '/'),
-            'base64'
-        ).toString('utf8')
-        return JSON.parse(json)
-    } catch {
-        return null
-    }
+export function verifyRefresh(token) {
+    return jwt.verify(token, REFRESH_SECRET, { algorithms: ['HS256'] })
 }
 
-export { AUTH_COOKIE }
+export async function setRefreshCookie(token) {
+    const cookieStore = await cookies()
+
+    cookieStore.set('refresh_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        path: '/api/refresh-token',
+        maxAge: 60 * 60 * 24 * 7,
+    })
+}
+
+export async function clearRefreshCookie() {
+    const cookieStore = await cookies()
+
+    cookieStore.set('refresh_token', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        path: '/api/refresh-token',
+        maxAge: 0,
+    })
+}
+
+export function generateJti() {
+    return crypto.randomUUID()
+}

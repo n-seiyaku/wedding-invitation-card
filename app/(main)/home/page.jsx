@@ -8,7 +8,7 @@ import ring from '@/public/src/assets/decorations/ring-2.svg'
 import { Button } from '@mui/material'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import { LocationPin } from '@mui/icons-material'
+import LocationPin from '@mui/icons-material/LocationPin'
 
 export default function Page() {
     return (

@@ -1,6 +1,8 @@
 import { Caladea, Dancing_Script, Roboto } from 'next/font/google'
 import './globals.css'
 import Providers from './providers'
+import { Suspense } from 'react'
+import Loading from './loading'
 
 const caladea = Caladea({
     variable: '--font-caladea',
@@ -37,7 +39,9 @@ export default function RootLayout({ children }) {
             <body
                 className={`${caladea.variable} ${dancingScript.variable} ${roboto.variable} antialiased`}
             >
-                <Providers>{children}</Providers>
+                <Providers>
+                    <Suspense fallback={<Loading />}>{children}</Suspense>
+                </Providers>
             </body>
         </html>
     )

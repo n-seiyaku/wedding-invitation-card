@@ -89,12 +89,12 @@ export default function Page() {
                     data-pswp-width={image.width}
                     data-pswp-height={image.height}
                     target="_blank"
-                    key={image + i}
+                    key={image.src + i}
                 >
                     <img
                         className="h-[200px] w-auto min-w-full object-cover"
                         src={image.src}
-                        alt=""
+                        alt={`Wedding photo ${i + 1}`}
                     />
                 </a>
             ))}

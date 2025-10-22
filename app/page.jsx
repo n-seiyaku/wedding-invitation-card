@@ -4,61 +4,61 @@ import Image from 'next/image'
 import flower from '@/public/src/assets/decorations/flower-1.png'
 import ring from '@/public/src/assets/decorations/ring-1.svg'
 import { Button } from '@mui/material'
-import { useState } from 'react'
-import { animate } from 'animejs'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Start from './components/Start'
+import Home from './components/Home'
+import Story from './components/Story'
+import Album from './components/Album'
+import Invite from './components/Invite'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollSmoother } from 'gsap/ScrollSmoother'
+import { useEffect, useState } from 'react'
+import TextPlugin from 'gsap/TextPlugin'
+import { SplitText } from 'gsap/SplitText'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollSmoother, ScrollTrigger, TextPlugin, ScrollToPlugin)
 
 export default function Page() {
-    const [pending, setPending] = useState(false)
-    const router = useRouter()
+    const [ready, setReady] = useState(false)
+    const [showLoader, setShowLoader] = useState(true)
 
-    const handleClick = async () => {
-        // setPending(true)
-        // await animate('#flower', {
-        //     scale: 0,
-        //     rotate: {
-        //         to: '.75turn',
-        //         ease: 'inOutQuad',
-        //     },
-        //     duration: 2000,
-        // })
-        // setPending(false)
-        router.push('/home')
-    }
+    // useEffect(() => {
+    //     const done = () => setReady(true)
+    //     if (document.readyState === 'complete') done()
+    //     else window.addEventListener('load', done)
+    //     return () => window.removeEventListener('load', done)
+    // }, [])
+
+    useGSAP(() => {
+        // if (!ready) return
+
+        const smoother = ScrollSmoother.create({
+            wrapper: '#smooth-wapper',
+            content: '#smooth-content',
+            smooth: 2,
+            smoothTouch: 0.2,
+        })
+    }, [ready, showLoader])
 
     return (
-        <div className="bg-brand-100 text-brand-500 relative flex h-dvh w-dvw flex-col items-center justify-center">
-            <div className="font-caladea absolute top-12 w-full text-center text-2xl">
-                THE WEDDING
+        <div id="smooth-wapper" className="relative">
+            {/* {showLoader && (
+                <Start
+                    setReady={setReady}
+                    setShowLoader={setShowLoader}
+                    ready={ready}
+                />
+            )} */}
+
+            <div id="smooth-content">
+                <Home />
+                <Story />
+                <Album />
+                <Invite />
             </div>
-            <div className="relative">
-                <Image id="flower" src={flower} alt="Flower" priority />
-                <div className="font-dancing-script absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 text-center text-4xl">
-                    <div>
-                        <span>
-                            Hoàng&nbsp;Vũ
-                            <br />
-                            Anh&nbsp;Đào
-                        </span>
-                    </div>
-                    <Image className="mr-7 ml-6" src={ring} alt="Ring" />
-                    <div>
-                        <span>
-                            Nguyễn
-                            <br />
-                            Đắc&nbsp;Long
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <Button
-                onClick={handleClick}
-                className="bg-brand-500 mt-4"
-                variant="contained"
-                loading={pending}
-            >
-                Mở thiệp mời
-            </Button>
         </div>
     )
 }
