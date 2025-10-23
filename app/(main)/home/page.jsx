@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
-import background from '@/public/src/assets/wedding-photos/1.png'
+import background from '@/public/src/assets/wedding-photos/1.webp'
 import flower from '@/public/src/assets/decorations/flower-2.png'
 import ring from '@/public/src/assets/decorations/ring-2.svg'
 import { Button } from '@mui/material'

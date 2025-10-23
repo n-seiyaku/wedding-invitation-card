@@ -20,6 +20,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText, TextPlugin)
 export default function Home() {
     const heroRef = useRef(null)
     const invitesRef = useRef(null)
+    const { isMobile } = useDevice()
 
     useGSAP(() => {
         if (!heroRef.current || !invitesRef.current) return
@@ -31,7 +32,6 @@ export default function Home() {
                 endTrigger: invitesRef.current, // kết thúc pin khi .invites...
                 end: 'top +=600', // ...chạm đỉnh viewport
                 pin: heroRef.current, // pin hero
-                markers: true, // bật để debug
             })
         }, heroRef)
 
@@ -41,7 +41,6 @@ export default function Home() {
                 start: 'top top',
                 end: '+=400', // hoặc `end: () => "+=" + heroRef.current.offsetHeight`
                 scrub: true,
-                markers: true,
             },
             objectPosition: '60% 30%',
             height: '240px',
@@ -72,7 +71,6 @@ export default function Home() {
             scrollTrigger: {
                 trigger: '.float-animation.invite-1',
                 start: 'top 90%',
-                markers: true,
                 toggleActions: 'play none none reverse',
             },
             stagger: 0.2,
@@ -105,7 +103,6 @@ export default function Home() {
             scrollTrigger: {
                 trigger: '.float-animation.invite-2',
                 start: 'top 90%',
-                markers: true,
                 toggleActions: 'play none none reverse',
             },
             stagger: 0.2,
@@ -137,8 +134,6 @@ export default function Home() {
         return () => ctx.revert()
     }, [])
 
-    const { isMobile } = useDevice()
-
     return (
         <div>
             <div
@@ -146,7 +141,7 @@ export default function Home() {
                 className="hero relative flex h-dvh w-screen items-center justify-center"
             >
                 <img
-                    className="background"
+                    className="background lg:object-[60%_19%]"
                     src="/src/assets/wedding-photos/1.webp"
                     alt="Background"
                     style={{
@@ -156,7 +151,7 @@ export default function Home() {
                     }}
                 />
                 <div className="title-animation font-caladea absolute top-12 w-full text-center text-2xl text-white">
-                    THE WEDDING {isMobile ? 'true' : 'false'}
+                    THE WEDDING
                 </div>
                 <div
                     style={{ color: '#adc8de', mixBlendMode: 'difference' }}

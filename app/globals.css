@@ -45,7 +45,8 @@ body {
     width: 1rem; /* giống indent-4 */
 }
 
-.text {
+.text,
+.line {
     overflow: hidden;
 }
 
