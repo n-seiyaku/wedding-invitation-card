@@ -1,10 +1,11 @@
 'use client'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-const DeviceContext = createContext({ isMobile: false })
+const DeviceContext = createContext({ isMobile: false, deviceReady: false })
 
 export function DeviceProvider({ children }) {
     const [isMobile, setIsMobile] = useState(false)
+    const [deviceReady, setDeviceReady] = useState(false)
 
     useEffect(() => {
         const ua =
@@ -17,9 +18,14 @@ export function DeviceProvider({ children }) {
                 ua
             )
         setIsMobile(mobile)
+
+        setDeviceReady(true)
     }, [])
 
-    const value = useMemo(() => ({ isMobile }), [isMobile])
+    const value = useMemo(
+        () => ({ isMobile, deviceReady }),
+        [isMobile, deviceReady]
+    )
 
     return (
         <DeviceContext.Provider value={value}>

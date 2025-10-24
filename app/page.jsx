@@ -15,7 +15,6 @@ import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/ScrollSmoother'
 import { useEffect, useState } from 'react'
 import TextPlugin from 'gsap/TextPlugin'
-import { SplitText } from 'gsap/SplitText'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -23,17 +22,16 @@ gsap.registerPlugin(ScrollSmoother, ScrollTrigger, TextPlugin, ScrollToPlugin)
 
 export default function Page() {
     const [ready, setReady] = useState(false)
-    const [showLoader, setShowLoader] = useState(true)
 
-    // useEffect(() => {
-    //     const done = () => setReady(true)
-    //     if (document.readyState === 'complete') done()
-    //     else window.addEventListener('load', done)
-    //     return () => window.removeEventListener('load', done)
-    // }, [])
+    useEffect(() => {
+        const done = () => setReady(true)
+        if (document.readyState === 'complete') done()
+        else window.addEventListener('load', done)
+        return () => window.removeEventListener('load', done)
+    }, [])
 
     useGSAP(() => {
-        // if (!ready) return
+        if (!ready) return
 
         const smoother = ScrollSmoother.create({
             wrapper: '#smooth-wapper',
@@ -41,17 +39,13 @@ export default function Page() {
             smooth: 2,
             smoothTouch: 0.2,
         })
-    }, [ready, showLoader])
+    }, [ready])
 
     return (
         <div id="smooth-wapper" className="relative">
-            {/* {showLoader && (
-                <Start
-                    setReady={setReady}
-                    setShowLoader={setShowLoader}
-                    ready={ready}
-                />
-            )} */}
+            {!ready && (
+                <div className="absolute z-10 h-dvh w-dvw bg-black"></div>
+            )}
 
             <div id="smooth-content">
                 <Home />

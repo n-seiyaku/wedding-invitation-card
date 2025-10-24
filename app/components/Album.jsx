@@ -1,41 +1,59 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import PhotoSwipeLightbox from 'photoswipe/lightbox'
-import 'photoswipe/style.css'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
+import 'yet-another-react-lightbox/styles.css'
+
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { Draggable } from 'gsap/Draggable'
 import InertiaPlugin from 'gsap/InertiaPlugin'
+
 import { Box, Paper, Skeleton } from '@mui/material'
 import { Masonry } from '@mui/lab'
 import { styled } from '@mui/material/styles'
-import Image from 'next/image'
-
-const STORAGE_PREFIX = 'pre-weddings'
 
 gsap.registerPlugin(Draggable, InertiaPlugin)
 
+const STORAGE_PREFIX = 'pre-weddings'
+
+// Lightbox chỉ render ở client
+const Lightbox = dynamic(() => import('yet-another-react-lightbox'), {
+    ssr: false,
+})
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(0.5),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: 12,
+}))
+
 export default function Album() {
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState([]) // [{ path, url, name, width?, height? }]
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    // TÁCH state
+    const [open, setOpen] = useState(false)
+    const [index, setIndex] = useState(0)
+
     const containerRef = useRef(null)
 
     const getImages = async () => {
         try {
-            const response = await fetch(`/api/images?prefix=${STORAGE_PREFIX}`)
-            const payload = await response.json().catch(() => ({}))
-            if (!response.ok)
+            const res = await fetch(`/api/images?prefix=${STORAGE_PREFIX}`)
+            const payload = await res.json().catch(() => ({}))
+            if (!res.ok)
                 throw new Error(
                     payload.supabaseError || payload.message || 'Fetch failed'
                 )
-
-            const files = payload.images ?? []
-            setImages(files)
-            setLoading(false)
-        } catch (err) {
-            setError(err.message)
+            setImages(payload.images ?? [])
+        } catch (e) {
+            setError(e.message)
+        } finally {
             setLoading(false)
         }
     }
@@ -44,22 +62,28 @@ export default function Album() {
         getImages()
     }, [])
 
-    // useEffect(() => {
-    //     console.log(images)
-    //     if (!images.length) {
-    //         return
-    //     }
+    const skeletons = Array.from({ length: 6 })
 
-    //     const lightbox = new PhotoSwipeLightbox({
-    //         gallery: '#my-gallery',
-    //         children: 'a',
-    //         pswpModule: () => import('photoswipe'),
-    //     })
+    // Memo hóa slides để không đổi reference vô cớ
+    const slides = useMemo(
+        () =>
+            (images || []).map((img) => ({
+                src: img.url,
+                alt: img.name || 'image',
+                width: img.width,
+                height: img.height,
+            })),
+        [images]
+    )
 
-    //     lightbox.init()
+    const handleOpenAt = (i) => {
+        setIndex(i)
+        setOpen(true)
+    }
 
-    //     return () => lightbox.destroy()
-    // }, [images])
+    const handleClose = () => {
+        setOpen(false)
+    }
 
     useGSAP(
         (context) => {
@@ -89,45 +113,49 @@ export default function Album() {
         { scope: containerRef, dependencies: [images] }
     )
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(0.5),
-        textAlign: 'center',
-        color: (theme.vars || theme).palette.text.secondary,
-        ...theme.applyStyles('dark', {
-            backgroundColor: '#1A2027',
-        }),
-    }))
-
-    const skeletons = Array.from({ length: 4 })
+    if (error) return <Box sx={{ p: 2 }}>Lỗi tải ảnh: {error}</Box>
 
     return (
-        <Box ref={containerRef} sx={{ width: '100%', minHeight: 393 }}>
-            <Masonry
-                columns={{ xs: 2, sm: 4 }}
-                spacing={2}
-                sx={{ alignContent: 'center', mx: 'auto' }}
-            >
-                {loading
-                    ? skeletons.map((_, index) => (
-                          <Skeleton
-                              key={index}
-                              variant="rectangular"
-                              className="min-h-[33vh] rounded-2xl"
-                          />
-                      ))
-                    : images.map((image) => (
-                          <Item key={image.path} className="rounded-xl">
-                              <Box
-                                  component="img"
-                                  src={image.url}
-                                  alt={image.name}
-                                  className="album-image-animation w-full rounded-xl"
-                              />
-                          </Item>
-                      ))}
-            </Masonry>
-        </Box>
+        <>
+            <Box ref={containerRef} sx={{ width: '100%', minHeight: 393 }}>
+                <Masonry
+                    columns={{ xs: 2, sm: 4 }}
+                    spacing={2}
+                    sx={{ alignContent: 'center', mx: 'auto' }}
+                >
+                    {images.map((image, i) => (
+                        <Item key={image.path}>
+                            <button
+                                type="button"
+                                onClick={() => handleOpenAt(i)}
+                                className="block w-full focus:outline-none"
+                                aria-label={`Open ${image.name || 'image'} in lightbox`}
+                            >
+                                <img
+                                    src={image.url}
+                                    alt={image.name || ''}
+                                    className="album-image-animation w-full rounded-xl"
+                                    style={{
+                                        willChange: 'opacity, transform',
+                                    }}
+                                />
+                            </button>
+                        </Item>
+                    ))}
+                </Masonry>
+
+                {/* Luôn mount Lightbox; điều khiển bằng open/index */}
+            </Box>
+
+            <Lightbox
+                open={open}
+                index={index}
+                close={handleClose}
+                slides={slides}
+                carousel={{ finite: false }}
+                controller={{ closeOnBackdropClick: true }}
+                animation={{ fade: 300, swipe: 400 }}
+            />
+        </>
     )
 }

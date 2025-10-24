@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import { supabase } from '../api/supabaseConfig'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { useDevice } from '../lib/DeviceContext'
 
 export default function Invite() {
     const [name, setName] = useState('')
@@ -21,6 +22,7 @@ export default function Invite() {
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
     const [nameError, setNameError] = useState('')
+    const { isMobile } = useDevice()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -83,10 +85,10 @@ export default function Invite() {
 
     return (
         <div className="font-roboto text-brand-500 flex h-dvh translate-y-[-40px] flex-col items-center justify-center">
-            <div className="bg-brand-50 flex w-[calc(100%-48px)] flex-col items-center justify-center rounded-2xl">
+            <div className="bg-brand-50 flex w-[calc(100%-48px)] flex-col items-center justify-center rounded-2xl lg:max-w-1/3">
                 <div className="font-dancing-script mt-4 text-center text-2xl">
                     Anh Đào
-                    <br />&<br />
+                    {isMobile && <br />} & {isMobile && <br />}
                     Đắc Long
                 </div>
                 <div className="w-52">

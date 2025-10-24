@@ -11,22 +11,28 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
+import { useDevice } from '../lib/DeviceContext'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 export default function Story() {
+    const { isMobile, deviceReady } = useDevice()
+
     useGSAP(() => {
+        if (!deviceReady) return
+
+        console.log(isMobile)
         const image1Timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: '.image-1',
-                start: 'top 80%',
-                // markers: true,
+                start: isMobile ? 'top center' : 'top 80%',
+                markers: true,
             },
         })
 
         image1Timeline
             .from('.image-1', {
-                x: 200,
+                xPercent: 100,
                 autoAlpha: 0,
                 duration: 1,
             })
@@ -42,187 +48,19 @@ export default function Story() {
                 }
             )
 
-        //     const image2Timeline = gsap.timeline({
-        //         scrollTrigger: {
-        //             trigger: '.image-2',
-        //             start: 'top 80%',
-        //             markers: true,
-        //         },
-        //     })
-
-        //     image2Timeline
-        //         .from('.image-2', {
-        //             x: -200,
-        //             autoAlpha: 0,
-        //             duration: 1,
-        //         })
-        //         .fromTo(
-        //             '.image-2 + .decoration-animation',
-        //             {
-        //                 rotate: -30,
-        //             },
-        //             {
-        //                 scale: 1,
-        //                 rotate: 0,
-        //                 ease: `back.out(${1.5 + 2 * 0.25})`,
-        //             }
-        //         )
-
-        //     document.fonts.ready.then(() => {
-        //         const story1 = SplitText.create('.section-1.text-animation', {
-        //             type: 'chars, words',
-        //         })
-
-        //         gsap.from(story1.chars, {
-        //             yPercent: 'random([-100, 100])',
-        //             autoAlpha: 0,
-        //             stagger: 0.005,
-        //             scrollTrigger: {
-        //                 trigger: '.section-1.text-animation',
-        //                 start: 'top 80%',
-        //                 markers: true,
-        //             },
-        //         })
-
-        //         const story2 = SplitText.create('.section-2.text-animation', {
-        //             type: 'chars, words',
-        //         })
-
-        //         gsap.from(story2.chars, {
-        //             yPercent: 'random([-100, 100])',
-        //             autoAlpha: 0,
-        //             stagger: 0.005,
-        //             scrollTrigger: {
-        //                 trigger: '.section-2.text-animation',
-        //                 start: 'top 80%',
-        //                 markers: true,
-        //             },
-        //         })
-        //     })
-
-        // const story = document.querySelector('.story-section')
-
-        // ScrollTrigger.create({
-        //     trigger: story,
-        //     start: 'top 60%', // khi phần đầu thẻ chạm 60% viewport
-        //     end: 'bottom 40%', // khi phần cuối thẻ còn trong khung nhìn 40%
-        //     onEnter: (self) => {
-        //         gsap.to(window, {
-        //             scrollTo: { y: self.start, offsetY: 0 }, // tự cuộn tới vị trí bắt đầu thẻ
-        //             duration: 0.6,
-        //             ease: 'power2.out',
-        //         })
-        //     },
-        //     onEnterBack: (self) => {
-        //         gsap.to(window, {
-        //             scrollTo: { y: self.start, offsetY: 0 },
-        //             duration: 0.6,
-        //             ease: 'power2.out',
-        //         })
-        //     },
-        //     markers: false,
-        // })]
-
-        /* ScrollTrigger.create({
-            trigger: '.story-section',
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: true,
-            pinSpacing: false,
-        })
-
-        document.fonts.ready.then(() => {
-            const tl = gsap.timeline({
+        if (!isMobile) {
+            gsap.from('.background-image', {
                 scrollTrigger: {
-                    trigger: '.story-section',
-                    start: 'top top',
-                    end: '+=400%',
-                    toggleActions: 'play none none reset',
+                    trigger: '.background-image',
+                    start: 'top 80%',
                     markers: true,
-                    scrub: true,
+                    toggleActions: 'play none none reset',
                 },
+                xPercent: -100,
+                autoAlpha: 0,
+                duration: 1,
             })
-
-            const splitLines = new SplitText('.reveal-text', {
-                type: 'lines',
-                linesClass: 'line',
-            })
-
-            const inner = new SplitText(splitLines.lines, {
-                type: 'words',
-                wordsClass: 'line-inner',
-            })
-
-            // tl.set(splitLines.lines, { overflow: 'hidden' })
-            // tl.set(inner.words,{  yPercent: 100 })
-
-            tl.from('.story-1 .line-inner', {
-                yPercent: 100,
-                ease: 'power4.out',
-                delay: 1,
-                skewY: 7,
-                stagger: {
-                    amount: 0.3,
-                },
-            })
-
-            const HOLD_DISTANCE = 100 // px
-            const SCROLL_DISTANCE = 600 // quãng bạn đang dùng cho hiệu ứng chính
-            const TOTAL_DISTANCE = SCROLL_DISTANCE + HOLD_DISTANCE
-            tl.to(
-                {},
-                {
-                    duration: HOLD_DISTANCE / TOTAL_DISTANCE, // tỉ lệ của khoảng chờ so với toàn timeline
-                    ease: 'none',
-                }
-            )
-
-            tl.to('.story-1 .line-inner', {
-                yPercent: 100,
-                ease: 'power2.out',
-            })
-
-            tl.from('.story-2 .line-inner', {
-                yPercent: 100,
-                ease: 'power4.out',
-                delay: 1,
-                skewY: 7,
-                stagger: {
-                    amount: 0.3,
-                },
-            })
-
-            tl.to(
-                '.story-2 .line-inner',
-                {
-                    yPercent: 100,
-                    ease: 'power2.out',
-                },
-                '+=0.5'
-            )
-
-            tl.from(
-                '.story-3 .line-inner',
-                {
-                    yPercent: 100,
-                    ease: 'power4.out',
-                    delay: 1,
-                    skewY: 7,
-                    stagger: {
-                        amount: 0.3,
-                    },
-                },
-                '+=0.5'
-            )
-
-            tl.to(
-                {},
-                {
-                    duration: 1 / 2, // tỉ lệ của khoảng chờ so với toàn timeline
-                    ease: 'none',
-                }
-            )
-        }) */
+        }
 
         document.fonts?.ready?.then(() => {
             const splitLines = new SplitText('.reveal-text', {
@@ -237,15 +75,6 @@ export default function Story() {
             // ảnh
             gsap.set(['.image-1', '.image-2', '.image-3'], { autoAlpha: 0 })
             gsap.set('.image-1', { autoAlpha: 1 }) // ảnh đầu tiên hiển thị
-
-            // (tùy chọn) preload ảnh để tránh nháy
-            // ;['.image-2', '.image-3'].forEach((sel) => {
-            //     const el = document.querySelector(sel)
-            //     if (el) {
-            //         const pre = new Image()
-            //         pre.src = el.getAttribute('src')
-            //     }
-            // })
 
             // Timeline cuộn + pin
             const tl = gsap.timeline({
@@ -320,36 +149,54 @@ export default function Story() {
                 ease: 'power2.out',
             })
 
+            tl.to(
+                '.image-2',
+                {
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                },
+                'switchToImage3'
+            )
+
+            tl.to(
+                '.image-3',
+                {
+                    autoAlpha: 1,
+                    duration: 0.6,
+                    ease: 'power2.out',
+                },
+                'switchToImage3'
+            )
+
             // reveal story-3
-            tl.from('.story-3 .line-inner', {
-                yPercent: 100,
-                ease: 'power4.out',
-                skewY: 7,
-                stagger: { amount: 0.3 },
-            })
+            tl.from(
+                '.story-3 .line-inner',
+                {
+                    yPercent: 100,
+                    ease: 'power4.out',
+                    skewY: 7,
+                    stagger: { amount: 0.3 },
+                },
+                'switchToImage3'
+            )
 
             tl.to({}, { duration: 0.25, ease: 'none' })
 
             ScrollTrigger.refresh()
         })
-    }, [])
+    }, [deviceReady, isMobile])
 
     return (
-        <div className="text-white">
+        <div className="mt-24 text-white">
             <div className="story-section h-[500dvh] lg:relative">
-                <div className="relative ml-auto lg:absolute lg:right-0 lg:w-full">
-                    <div className="relative lg:h-[80dvh] lg:w-full">
+                <div className="ml-auto sm:w-dvw lg:absolute lg:right-0 lg:w-full">
+                    <div className="relative w-full lg:h-[80dvh]">
                         <img
-                            className="image-1 absolute top-0 right-0 h-full"
+                            className="image-1 lg:absolute lg:top-0 lg:right-0 lg:h-full"
                             src="/src/assets/wedding-photos/9.webp"
                             alt="Photo 1"
                         />
-                        {/* <Image
-                            className="decoration-animation absolute bottom-0 left-1/2 w-1/2 -translate-x-1/2 translate-y-1/2 scale-0"
-                            src={decoration}
-                            priority
-                            alt="Decoration"
-                        /> */}
                         <img
                             className="image-2 absolute top-0 right-0 h-full"
                             src="/src/assets/wedding-photos/31.webp"
@@ -357,12 +204,12 @@ export default function Story() {
                         />
                         <img
                             className="image-3 absolute top-0 right-0 h-full"
-                            src="/src/assets/wedding-photos/9.webp"
+                            src="/src/assets/wedding-photos/19.webp"
                             alt="Photo 1"
                         />
                     </div>
 
-                    <div className="lg:absolute lg:bottom-[-15dvh] lg:left-[5dvw] lg:z-10 lg:h-[54dvh] lg:w-1/2 lg:bg-[#e6eef5]">
+                    <div className="background-image lg:absolute lg:bottom-[-15dvh] lg:left-[5dvw] lg:z-10 lg:h-[54dvh] lg:w-1/2 lg:bg-[#e6eef5]">
                         <section className="text-animation section-1 relative mx-8">
                             <p className="story-1 reveal-text absolute mt-4 text-justify text-[clamp(12px,4vw,16px)] leading-relaxed tracking-wide lg:text-[#324a5f]">
                                 Riêng Đào, tin, rất tin nha! Thỉnh thoảng quay
