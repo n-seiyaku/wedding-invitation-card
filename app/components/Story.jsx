@@ -41,7 +41,6 @@ export default function Story() {
                     pin: true, // pin ngay trên timeline này
                     pinSpacing: false, // để tạo không gian, tránh rời pin sớm
                     anticipatePin: 1,
-                    markers: true,
                 },
             })
 
