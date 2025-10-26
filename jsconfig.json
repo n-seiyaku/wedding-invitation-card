@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "checkJs": true,
-        "jsx": "react-jsx",
-        "baseUrl": ".",
-        "paths": { "@/*": ["./*"] },
+        "paths": {
+            "@/*": ["./*"]
+        },
         "module": "esnext",
-        "moduleResolution": "bundler"
+        "moduleResolution": "bundler",
+        "ignoreDeprecations": "6.0"
     },
     "exclude": ["node_modules", ".next", "out", "build"]
 }

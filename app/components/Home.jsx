@@ -1,20 +1,21 @@
 'use client'
 
 import React, { useRef } from 'react'
-import Image from 'next/image'
-import background from '@/public/src/assets/wedding-photos/1.webp'
-import flower from '@/public/src/assets/decorations/flower-2.png'
-import ring from '@/public/src/assets/decorations/ring-2.svg'
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import { Button } from '@mui/material'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import Image from 'next/image'
 import LocationPin from '@mui/icons-material/LocationPin'
-import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
 import { SplitText } from 'gsap/SplitText'
 import TextPlugin from 'gsap/TextPlugin'
+import background from '@/public/src/assets/wedding-photos/1.webp'
+import flower from '@/public/src/assets/decorations/flower-2.png'
+import gsap from 'gsap'
+import ring from '@/public/src/assets/decorations/ring-2.svg'
 import { useDevice } from '../lib/DeviceContext'
+import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, TextPlugin)
 export default function Home() {
@@ -250,7 +251,7 @@ export default function Home() {
                                     </div>
                                     <div className="ml-3">
                                         <AccessTimeIcon fontSize="inherit" />
-                                        <span className="ml-2">16 gi? 30</span>
+                                        <span className="ml-2">16 giờ 30</span>
                                     </div>
                                     <div className="ml-3">
                                         <LocationPin fontSize="inherit" />

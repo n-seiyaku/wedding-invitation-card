@@ -1,17 +1,17 @@
 'use client'
 
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
 import 'yet-another-react-lightbox/styles.css'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import { Box, Paper, Skeleton } from '@mui/material'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+
 import { Draggable } from 'gsap/Draggable'
 import InertiaPlugin from 'gsap/InertiaPlugin'
-
-import { Box, Paper, Skeleton } from '@mui/material'
 import { Masonry } from '@mui/lab'
+import dynamic from 'next/dynamic'
+import gsap from 'gsap'
 import { styled } from '@mui/material/styles'
+import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(Draggable, InertiaPlugin)
 
@@ -117,7 +117,10 @@ export default function Album() {
 
     return (
         <>
-            <Box ref={containerRef} sx={{ width: '100%', minHeight: 393 }}>
+            <Box
+                ref={containerRef}
+                sx={{ width: '100%', minHeight: 393, marginTop: '150px' }}
+            >
                 <Masonry
                     columns={{ xs: 2, sm: 4 }}
                     spacing={2}
