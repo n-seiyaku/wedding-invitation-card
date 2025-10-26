@@ -214,7 +214,7 @@ export default function Home() {
 
                                 <Button
                                     target="_blank"
-                                    href="https://maps.app.goo.gl/fvUWXpsFa2Jyfc6MA"
+                                    href="https://maps.app.goo.gl/PFhQmVT6XSnRfxwj9"
                                     className="bg-brand-500 font-roboto my-6 w-[calc(100%-48px)] font-black text-white"
                                     variant="contained"
                                 >
@@ -264,7 +264,7 @@ export default function Home() {
 
                                 <Button
                                     target="_blank"
-                                    href="https://maps.app.goo.gl/fvUWXpsFa2Jyfc6MA"
+                                    href="https://maps.app.goo.gl/MhdACfDDQtSP7RJK8"
                                     className="bg-brand-500 font-roboto my-6 w-[calc(100%-48px)] font-black text-white"
                                     variant="contained"
                                 >

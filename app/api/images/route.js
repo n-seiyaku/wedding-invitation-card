@@ -15,8 +15,6 @@ export async function GET(request) {
                 sortBy: { column: 'name', order: 'asc' },
             })
 
-        console.log(data)
-
         if (error) {
             console.error('Supabase storage list failed', error)
             return Response.json(
