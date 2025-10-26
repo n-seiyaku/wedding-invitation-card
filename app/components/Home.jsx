@@ -256,7 +256,7 @@ export default function Home() {
                                     <div className="ml-3">
                                         <LocationPin fontSize="inherit" />
                                         <span className="ml-2 inline text-justify">
-                                            Số 70, Đườnng Ngô Quyền, Phường La
+                                            Số 70, Đường Ngô Quyền, Phường La
                                             Gi, Tỉnh Lâm Đồng
                                         </span>
                                     </div>
